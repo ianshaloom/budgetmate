@@ -4,11 +4,12 @@ import 'pages/homepage.dart';
 
 void main() {
   runApp(MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 21, 0, 56)),
-        useMaterial3: true,
-      ),
-      home: const HomePage(),
-    ));
+    title: 'Budget Mate',
+    theme: ThemeData(
+      colorSchemeSeed: const Color(0xffbc5090),
+      useMaterial3: true,
+    ),
+    debugShowCheckedModeBanner: false,
+    home: const HomePage(),
+  ));
 }
