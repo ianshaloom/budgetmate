@@ -1,43 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
-class ExpenseTile extends StatelessWidget {
+class BudgetTile extends StatelessWidget {
   // expense tile data
   final String? id;
   final String title;
   final double amount;
   final DateTime date;
-  final Function(BuildContext)? delete;
 
   // Constructor
-  const ExpenseTile({
+  const BudgetTile({
     super.key,
     this.id,
     required this.title,
     required this.amount,
     required this.date,
-     required this.delete,
   });
 
   @override
   Widget build(BuildContext context) {
-    String exAmount = NumberFormat('#,##0.00').format(amount);
+    String bgAmount = NumberFormat('#,##0.00').format(amount);
     return Padding(
-      padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 10),
-      child: Slidable(
-        endActionPane:  ActionPane(
-          motion: const StretchMotion(),
-          children: [
-            SlidableAction(
-              onPressed: delete,
-              backgroundColor: const Color.fromARGB(255, 121, 0, 0),
-              icon: Icons.delete_outlined,
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ],
-        ),
+        padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 10),
         child: Card(
           child: Row(
             children: [
@@ -45,11 +30,11 @@ class ExpenseTile extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     top: 8.0, bottom: 8, left: 8, right: 10),
                 child: CircleAvatar(
-                  radius: 30,
+                  radius: 35,
                   backgroundColor:
                       Theme.of(context).primaryColor.withOpacity(0.9),
                   child: const Icon(
-                    CupertinoIcons.creditcard_fill,
+                    CupertinoIcons.bag_fill_badge_plus,
                     color: Colors.white,
                     size: 40,
                   ),
@@ -64,7 +49,7 @@ class ExpenseTile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 5.0),
                       child: Text(
-                        "+ Ksh. $exAmount",
+                        "Ksh. $bgAmount",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
@@ -73,10 +58,8 @@ class ExpenseTile extends StatelessWidget {
                       width: double.infinity,
                       child: Wrap(
                         children: [
-                          Text(
-                            title,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                          Text(title,
+                              style: Theme.of(context).textTheme.bodyMedium),
                         ],
                       ),
                     ),
@@ -92,8 +75,6 @@ class ExpenseTile extends StatelessWidget {
               )
             ],
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

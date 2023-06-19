@@ -1,119 +1,143 @@
-import 'package:budgetmate/widgets/expensetile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widgets/chartslideshow.dart';
+import '../widgets/expensetile.dart';
 import '../database/expense.dart';
 import '../widgets/clip_paths.dart';
-import '../widgets/twobuttons.dart';
 
 class ExpensePage extends StatelessWidget {
   final void Function()? onAdd;
   final void Function()? onClear;
+  final Function deleteExpense;
+  final List<Expense> expenses;
+  final List<Expense> recentExpences;
 
-  // Expense List
-  final List<Expense> expenses = [
-    Expense(
-      id: 'e1',
-      title: 'New Laptop',
-      amount: 35000.00,
-      date: DateTime.now(),
-    ),
-    Expense(
-      id: 'e1',
-      title: 'Account Retry',
-      amount: 5000.00,
-      date: DateTime.now(),
-    ),
-    Expense(
-      id: 'e1',
-      title: 'Semester Fee',
-      amount: 25000.00,
-      date: DateTime.now(),
-    ),
-  ];
-
-  ExpensePage({
+  const ExpensePage({
     super.key,
     required this.onAdd,
     required this.onClear,
+    required this.deleteExpense,
+    required this.expenses,
+    required this.recentExpences,
   });
+
+  void delete(int index) {
+    deleteExpense(index);
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Stack(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height,
-            decoration: const BoxDecoration(
-              color: Color(0xffffa600),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                bottomLeft: Radius.circular(40),
-                topRight: Radius.circular(10),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 0,
-                  child: Container(
+      padding: const EdgeInsets.only(bottom: 2.0),
+      child: Container(
+        width: size.width,
+        height: size.height,
+        decoration: const BoxDecoration(
+          //color: Colors.black,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(75.0),
+          ),
+        ),
+        child: expenses.isNotEmpty
+            ? Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(left: 8),
+                    margin: const EdgeInsets.only(
+                        bottom: 10, top: 10, left: 5, right: 5),
                     height: 200,
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: ClipPath(
-                    clipper: DrawClip2(),
-                    /* child: Padding(
-                      padding: const EdgeInsets.only(top: 0, bottom: 0),
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(bottom: 60),
-                        itemCount: 100,
-                        itemBuilder: (context, index) {
-                          return const ExpenseTile(
-                            pageIndex: 0,
-                            id: e.id,
-                            title: e.title,
-                            amount: e.amount,
-                            date: e.date,
-                          );
-                          
-                        },
+                    decoration: const BoxDecoration(
+                      //color: Color.fromARGB(158, 255, 0, 0),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(75.0),
                       ),
-                    ), */
-                    child: Column(
-                      children: expenses.map((e) {
-                        return ExpenseTile(
-                          pageIndex: 0,
-                          id: e.id,
-                          title: e.title,
-                          amount: e.amount,
-                          date: e.date,
-                        );
-                      }).toList(),
+                    ),
+                    child: Chartslideshow(
+                      recentExpences: recentExpences,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 10,
-            right: 0,
-            left: 0,
-            child: FloatingButtons(
-              onAdd: onAdd,
-              onClear: onClear,
-              pageIndex: 1,
-              totalAmount: '15,000',
-            ),
-          ),
-        ],
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: ClipPath(
+                      clipper: DrawClip2(),
+                      child: ListView.builder(
+                        itemCount: expenses.length,
+                        itemBuilder: (context, index) => ExpenseTile(
+                          title: expenses[index].title,
+                          amount: expenses[index].amount,
+                          date: expenses[index].date,
+                          delete: (context) => delete(index),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : _noData(context),
       ),
     );
+  }
+
+  Widget _noData(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
+    return orientation == Orientation.portrait
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/images/data.svg',
+                width: double.infinity, // Adjust the width as needed
+                height: 200, // Adjust the height as needed
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0, top: 30),
+                      child: Text(
+                        'No expenses added yet!',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      'assets/images/arrow.svg',
+                      height: 120,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/images/data.svg',
+                width: double.infinity, // Adjust the width as needed
+                height: 200, // Adjust the height as needed
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0, left: 20),
+                      child: Text(
+                        'No expenses added yet!',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      'assets/images/arrow.svg',
+                      height: 120,
+                    ),
+                  ],
+                ),
+              )
+            ],
+          );
   }
 }
