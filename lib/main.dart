@@ -1,86 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import 'pages/homepage.dart';
+import 'utils/color_pallet.dart';
+import 'models/budget-models/budgetmodel/budget.dart';
+import 'utils/routes.dart';
 
-void main() {
-  runApp(MaterialApp(
-    title: 'Budget Mate',
-    theme: ThemeData(
-      primaryColor: const Color(0xff2c3140),
-      fontFamily: "Poppins",
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-      // Appbar Theme
-      appBarTheme: const AppBarTheme(
-        color: Color(0xff2c3140),
-        centerTitle: true,
-        elevation: 0,
-        titleTextStyle: TextStyle(
-          fontSize: 24,
-          color: Colors.white,
-          fontWeight: FontWeight.w300,
-        ),
-      ),
+  // Set preferred orientations
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Portrait mode with the device upright
+    DeviceOrientation.portraitDown, // Portrait mode with the device upside down
+  ]);
 
-      // Floating Buttons Theme
-      floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Color(0xff2c3140),
-        shape: CircleBorder(),
-      ),
+  await Hive.initFlutter();
 
-      // Card Theme
-      cardTheme: const CardTheme(
-        elevation: 2,
-        color: Color.fromARGB(235, 255, 255, 255),
-      ),
+  // Register Hive Adapters
+  Hive.registerAdapter(BudgetModelAdapter());
+  print('1');
+  Hive.registerAdapter(SpendingAdapter());
+  print('2');
+  Hive.registerAdapter(ExpenseAdapter());
+  print('3');
 
-      // Text Theme
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(
-          fontSize: 23,
-          color: Colors.white,
-          fontWeight: FontWeight.w300,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 18,
-          color: Color(0xff2c3140),
-          fontWeight: FontWeight.w300,
-        ),
-        bodySmall: TextStyle(
-          fontSize: 12,
-          color: Color.fromARGB(148, 44, 49, 64),
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+  await Hive.openBox<BudgetModel>('budget');
+  await Hive.openBox<Spending>('spending');
+  await Hive.openBox<Expense>('expense');
+  await Hive.openBox('budgetmate');
 
-      // Bottom Sheet Theme
-      bottomSheetTheme: const BottomSheetThemeData(
-        modalElevation: 1,
-        modalBackgroundColor: Colors.white,
-        modalBarrierColor: Color.fromARGB(123, 44, 49, 64),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20.0),
+  runApp(
+    MaterialApp(
+      title: 'Budget Mate',
+      theme: ThemeData(
+        primarySwatch: budgetmateColor,
+        fontFamily: "Poppins",
+
+        // Appbar Theme
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+          titleTextStyle: TextStyle(
+            fontSize: 19,
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
           ),
-          side: BorderSide(
+        ),
+
+        // Floating Buttons Theme
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          shape: CircleBorder(),
+        ),
+
+        // Card Theme
+        cardTheme: CardTheme(
+          elevation: 0,
+          color: const Color(0xffF2F2FA),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+               
+          ),
+        ),
+
+        // Text Theme
+        textTheme: TextTheme(
+          bodyLarge: const TextStyle(
+              fontSize: 40,
+              color: Colors.white,
+              fontWeight: FontWeight.w300,
+              fontFamily: 'OpenSans'),
+          bodyMedium: const TextStyle(
+            fontSize: 18,
             color: Color(0xff2c3140),
+            fontWeight: FontWeight.w300,
+          ),
+          bodySmall: const TextStyle(
+            fontSize: 12,
+            color: Color.fromARGB(148, 44, 49, 64),
+            fontWeight: FontWeight.w500,
+          ),
+
+          //body labels
+          labelSmall: TextStyle(
+            fontSize: 12,
+            color: const Color(0xffFFFFFF).withOpacity(0.6),
+            fontFamily: 'OpenSans',
+          ),
+          labelMedium: const TextStyle(
+            fontSize: 17,
+            color: Color(0xffFFFFFF),
+            fontWeight: FontWeight.w600,
+            fontFamily: 'OpenSans',
+          ),
+          labelLarge: const TextStyle(
+            fontSize: 18,
+            color: Color(0xff000000),
+            fontWeight: FontWeight.w600,
           ),
         ),
-      ),
-      
-      // Icon Button Theme
-      iconButtonTheme: IconButtonThemeData(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color?>(Colors.white),
-          iconColor: MaterialStateProperty.all<Color?>(
-            const Color(0xff2c3140),
+
+        // Bottom Sheet Theme
+        bottomSheetTheme: const BottomSheetThemeData(
+          modalElevation: 1,
+          modalBackgroundColor: Colors.white,
+          modalBarrierColor: Color.fromARGB(123, 44, 49, 64),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(20.0),
+            ),
+            side: BorderSide(
+              color: Color(0xff2c3140),
+            ),
           ),
         ),
+
+        // Icon Button Theme
+        iconButtonTheme: IconButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color?>(Colors.white),
+            iconColor: MaterialStateProperty.all<Color?>(
+              const Color(0xff2c3140),
+            ),
+          ),
+        ),
+        
+        
       ),
-      
-      // Circle Avatar Theme
-      
+      debugShowCheckedModeBanner: false,
+      routes: routes,
     ),
-    debugShowCheckedModeBanner: false,
-    home: const HomePage(),
-  ));
+  );
 }
