@@ -49,17 +49,17 @@ class BudgetModelAdapter extends TypeAdapter<BudgetModel> {
           typeId == other.typeId;
 }
 
-class SpendingAdapter extends TypeAdapter<Spending> {
+class SpendingModelAdapter extends TypeAdapter<SpendingModel> {
   @override
   final int typeId = 1;
 
   @override
-  Spending read(BinaryReader reader) {
+  SpendingModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Spending(
+    return SpendingModel(
       ids: (fields[3] as List).cast<int>(),
       name: fields[0] as String,
       spendingAmount: fields[1] as double,
@@ -68,7 +68,7 @@ class SpendingAdapter extends TypeAdapter<Spending> {
   }
 
   @override
-  void write(BinaryWriter writer, Spending obj) {
+  void write(BinaryWriter writer, SpendingModel obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -87,22 +87,22 @@ class SpendingAdapter extends TypeAdapter<Spending> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SpendingAdapter &&
+      other is SpendingModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class ExpenseAdapter extends TypeAdapter<Expense> {
+class ExpenseModelAdapter extends TypeAdapter<ExpenseModel> {
   @override
   final int typeId = 2;
 
   @override
-  Expense read(BinaryReader reader) {
+  ExpenseModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Expense(
+    return ExpenseModel(
       ids: (fields[4] as List).cast<int>(),
       category: fields[0] as String,
       expenseName: fields[1] as String,
@@ -112,7 +112,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
   }
 
   @override
-  void write(BinaryWriter writer, Expense obj) {
+  void write(BinaryWriter writer, ExpenseModel obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -133,7 +133,7 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ExpenseAdapter &&
+      other is ExpenseModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

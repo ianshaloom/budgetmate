@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,9 +6,7 @@ import '../../data/data.dart';
 import '../../globalwidgtes/disable_list_glow.dart';
 import '../../models/budget-models/budgetmodel/budget.dart';
 import '../../models/hive/boxes.dart';
-import 'homescreen_views/bottomsheets/new_item.dart';
-import 'homescreen_views/dialogs/new_expense_dialog/new_expense_dialog.dart';
-import 'homescreen_views/dialogs/new_budget_dialog/new_budget_dialog.dart';
+import 'homescreen_views/bottomsheets/notification-bs/notification.dart';
 import 'homescreen_widgets/budget_tile_widget.dart';
 import 'homescreen_widgets/payment_tile.dart';
 
@@ -21,8 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   @override
   void initState() {
     super.initState();
@@ -31,13 +26,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 0,
+            child: Padding(
               padding: const EdgeInsets.only(left: 10, bottom: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,26 +52,9 @@ class _HomePageState extends State<HomePage> {
                             //fontFamily: 'OpenSans',
                             ),
                       ),
-                      ElevatedButton(
-                        onPressed: () => _newItemBS(context),
-                        /* onPressed: () async {
-                          await Boxes.expenseBox().clear();
-                          await Boxes.budgetmate().clear();
-                        }, */
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all<double>(0),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).primaryColor.withOpacity(0.4),
-                            ),
-                            shape: MaterialStateProperty.all<CircleBorder>(
-                              const CircleBorder(),
-                            ),
-                            fixedSize: MaterialStateProperty.all<Size>(
-                                const Size.fromRadius(20))),
-                        child: const Icon(
-                          CupertinoIcons.pen,
-                          color: Colors.black,
-                        ),
+                      GestureDetector(
+                        onTap: () => _notificationBS(context),
+                        child: _notification(context),
                       ),
                     ],
                   ),
@@ -90,40 +70,28 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(
+          ),
+          Expanded(
+            child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               height: 250,
               child: ValueListenableBuilder(
                   valueListenable: Boxes.budgetBox().listenable(),
                   builder: (context, box, _) {
                     final budgets = box.values.toList().cast<BudgetModel>();
-                    print(budgets);
                     return box.isEmpty
-                        ? Row(
-                            //mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: SvgPicture.asset(
-                                  'assets/images/empty-budget.svg',
-                                  fit: BoxFit.contain,
-                                  //height: 250,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: SvgPicture.asset(
-                                  'assets/images/arrow.svg',
-                                  fit: BoxFit.contain,
-                                  // height: 250,
-                                ),
-                              )
-                            ],
+                        ? SvgPicture.asset(
+                            'assets/images/empty-budget.svg',
+                            fit: BoxFit.contain,
+                            //height: 250,
                           )
                         : BudgetView(budgets: budgets);
                   }),
             ),
-            Padding(
+          ),
+          Expanded(
+            flex: 0,
+            child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,8 +105,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () =>
-                        Navigator.of(context).pushNamed('/expense_list_page'),
+                    onTap: () => Navigator.of(context)
+                        .pushNamed('/home_page/paymentlist_page/'),
                     child: Text(
                       'View all',
                       style: TextStyle(
@@ -151,106 +119,95 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Flexible(
-              fit: FlexFit.tight,
-              child: SizedBox(
-                child: GlowingOverscrollWrapper(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent:
-                          (MediaQuery.of(context).size.width * (1 / 3)),
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemCount: 9,
-                    itemBuilder: (context, index) {
-                      List titles = categories;
-                      List paths = categoriesMap.values.toList().cast<String>();
-                      return PaymentTile(
-                        title: titles[index],
-                        svgPath: paths[index],
-                      );
-                    },
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            child: SizedBox(
+              child: AntiListGlowWrapper(
+                child: GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent:
+                        (MediaQuery.of(context).size.width * (1 / 3)),
+                    childAspectRatio: 1,
+                    crossAxisSpacing: 10,
                   ),
-                ),
-                /* child: ValueListenableBuilder(
-                  valueListenable: Boxes.expenseBox().listenable(),
-                  builder: (context, value, child) {
-                    final ex = value.values.toList().reversed;
-                    final expenses = ex.toList().cast<Expense>();
-                    return value.isEmpty
-                        ? Center(
-                            child: SvgPicture.asset(
-                              'assets/images/empty.svg',
-                              fit: BoxFit.contain,
-                              height: 150,
-                            ),
-                          )
-                        : GlowingOverscrollWrapper(
-                            child: ListView.builder(
-                                itemCount:
-                                    expenses.length >= 6 ? 5 : expenses.length,
-                                itemBuilder: (context, index) {
-                                  return ExpenseTile(
-                                    exp: expenses[index],
-                                  );
-                                }),
-                          );
+                  itemCount: 9,
+                  itemBuilder: (context, index) {
+                    List titles = categories;
+                    List paths = categoriesMap.values.toList().cast<String>();
+                    return PaymentTile(
+                      title: titles[index],
+                      svgPath: paths[index],
+                    );
                   },
-                ), */
+                ),
               ),
-            )
-          ],
-        ),
-      );
-  }
-
-  // Add new Budget Dialog Functions ----------------- //
-  Future _addNewBudget(BuildContext cxt) async {
-    print('executed at method 1');
-    Navigator.of(context).pop();
-    await showDialog(
-      context: cxt,
-      builder: (context) => const NewBudgetDialog(
-        budget: null,
+            ),
+          )
+        ],
       ),
     );
   }
-  // ----------------------------------------------- //
 
-  // Add new Budget Dialog Functions ----------------- //
-  Future _addNewExpense(BuildContext cxt) async {
-    print('executed at method 1');
-    Navigator.of(context).pop();
-    await showDialog(
-      context: cxt,
-      builder: (context) => const NewExpenseSD(),
+  Widget _notification(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: Stack(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            child: SvgPicture.asset(
+              'assets/icons/notification.svg',
+              height: 25,
+            ),
+          ),
+          Positioned(
+              right: 10,
+              top: 10,
+              child: ValueListenableBuilder(
+                valueListenable: Boxes.notificationBox().listenable(),
+                builder: (context, box, _) {
+                  var n = box.values
+                      .where((element) => element.title != 'seen')
+                      .toList();
+                  return CircleAvatar(
+                    backgroundColor: n.isNotEmpty
+                        ? const Color(0xffc90000)
+                        : Colors.transparent,
+                    radius: 4,
+                  );
+                },
+              ))
+        ],
+      ),
     );
   }
   // ----------------------------------------------- //
 
   // Add new Item Dialog Functions ----------------- //
-  Future _newItemBS(BuildContext cxt) async {
+  Future _notificationBS(BuildContext cxt) async {
+    var l = GetMe.notifications;
+    for (var element in l) {
+      print(element.id);
+    }
+    print(GetMe.notifications);
     await showModalBottomSheet(
-      /* backgroundColor: Colors.transparent,
-        elevation: 0,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(0.0),
-          ),
-        ),
-        context: cxt,
-        builder: (context) => const MyWidget() */
-      //
-      //
-      //
       context: cxt,
-      builder: (context) => AddNewItemBS(
-        newBudget: _addNewBudget,
-        newExpense: _addNewExpense,
-      ),
+      builder: (context) => const NotificationBS(),
     );
   }
+  // ----------------------------------------------- //
+
+  // Add new Budget Dialog Functions ----------------- //
+  /* Future _newPaymentSD(BuildContext cxt, String title, String svgPath) async {
+    await showDialog(
+      context: cxt,
+      builder: (context) => NewPaymentPage(
+        title: title,
+        svgPath: svgPath,
+      ),
+    );
+  } */
   // ----------------------------------------------- //
 }

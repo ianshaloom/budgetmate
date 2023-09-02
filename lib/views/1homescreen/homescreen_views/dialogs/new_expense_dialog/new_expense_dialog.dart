@@ -1,4 +1,4 @@
-import 'package:budgetmate/models/data_validation.dart';
+import 'package:budgetmate/data/data_validation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +7,7 @@ import '../../../../../data/data.dart';
 import '../../../../../globalwidgtes/textinput.dart';
 import '../../../../../models/budget-models/budgetmodel/budget.dart';
 import '../../../../../models/hive/boxes.dart';
-import '../../../../../models/views_data.dart';
+import '../../../../../data/views_data.dart';
 
 class NewExpenseSD extends StatefulWidget {
   const NewExpenseSD({super.key});
@@ -21,8 +21,7 @@ class _NewExpenseSDState extends State<NewExpenseSD> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
 
-  final List<String> _dropdownItems = 
-  categories;
+  final List<String> _dropdownItems = categories;
   ViewData a = ViewData();
 
   void clearLists() {
@@ -146,6 +145,7 @@ class _NewExpenseSDState extends State<NewExpenseSD> {
                         controller: _titleController,
                         hintText: 'Expense Name',
                         isNumber: false,
+                        autofocus: false,
                         onSubmitted: null,
                       ),
                     ),
@@ -155,6 +155,7 @@ class _NewExpenseSDState extends State<NewExpenseSD> {
                         controller: _amountController,
                         hintText: 'Expense Amount',
                         isNumber: true,
+                        autofocus: false,
                         onSubmitted: null,
                       ),
                     ),
@@ -198,7 +199,7 @@ class _NewExpenseSDState extends State<NewExpenseSD> {
     ids[0] = _selectedBudgetObject.id;
     ids[1] = _spendingId;
 
-    final sp = Expense(
+    final sp = ExpenseModel(
       ids: ids,
       category: _selectedItem,
       expenseName: _titleController.text.trim(),
@@ -211,6 +212,8 @@ class _NewExpenseSDState extends State<NewExpenseSD> {
     setState(() {
       Boxes.expenseBox().add(sp);
     });
+    NotiViewData().budgetNoti(_selectedBudgetObject);
+    NotiViewData().spendNoti(_selectedSpendingObject);
     _onCancel();
   }
 
@@ -297,7 +300,7 @@ class _NewExpenseSDState extends State<NewExpenseSD> {
   List<String> _names = ['Select a budget'];
   String? _selectedSpending;
   int _spendingId = getRandom();
-  late Spending _selectedSpendingObject;
+  late SpendingModel _selectedSpendingObject;
   void _getSpendingId(String value) {
     _selectedSpendingObject =
         ViewData.spendings.where((element) => element.name == value).first;

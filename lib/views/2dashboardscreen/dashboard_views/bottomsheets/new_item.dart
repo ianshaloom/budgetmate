@@ -10,7 +10,7 @@ class AddNewItemBS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 100,
       child: Column(
         children: [
           Container(
@@ -20,28 +20,6 @@ class AddNewItemBS extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.black,
-            ),
-          ),
-          InkWell(
-            onTap: () => newExpense(context),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.transparent,
-                child: SvgPicture.asset(
-                  'assets/images/expense.svg',
-                  fit: BoxFit.contain,
-                  height: 45,
-                ),
-              ),
-              title: Text(
-                'Add a New Expense',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              subtitle: Text(
-                'New expense item with amount and date',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
             ),
           ),
           InkWell(
@@ -57,7 +35,7 @@ class AddNewItemBS extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Create a Budget',
+                'Create a new budget',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               subtitle: Text(

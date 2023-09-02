@@ -89,7 +89,7 @@ class BgExpensesPage extends StatelessWidget {
                     final expenses = ex
                         .where((element) => element.ids[0] == budget.id)
                         .toList()
-                        .cast<Expense>();
+                        .cast<ExpenseModel>();
                     return value.isEmpty
                         ? Center(
                             child: SvgPicture.asset(
@@ -98,7 +98,7 @@ class BgExpensesPage extends StatelessWidget {
                               height: 250,
                             ),
                           )
-                        : GlowingOverscrollWrapper(
+                        : AntiListGlowWrapper(
                             child: ListView.builder(
                                 itemCount: expenses.length,
                                 itemBuilder: (context, index) {

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'utils/color_pallet.dart';
 import 'models/budget-models/budgetmodel/budget.dart';
+import 'models/notification-model/notification.dart';
+import 'utils/color_pallet.dart';
 import 'utils/routes.dart';
 
 Future main() async {
@@ -20,14 +21,17 @@ Future main() async {
   // Register Hive Adapters
   Hive.registerAdapter(BudgetModelAdapter());
   print('1');
-  Hive.registerAdapter(SpendingAdapter());
+  Hive.registerAdapter(SpendingModelAdapter());
   print('2');
-  Hive.registerAdapter(ExpenseAdapter());
+  Hive.registerAdapter(ExpenseModelAdapter());
   print('3');
+  Hive.registerAdapter(NotificationModelAdapter());
+  print('4');
 
   await Hive.openBox<BudgetModel>('budget');
-  await Hive.openBox<Spending>('spending');
-  await Hive.openBox<Expense>('expense');
+  await Hive.openBox<SpendingModel>('spending');
+  await Hive.openBox<ExpenseModel>('expense');
+  await Hive.openBox<NotificationModel>('notification');
   await Hive.openBox('budgetmate');
 
   runApp(
@@ -36,6 +40,8 @@ Future main() async {
       theme: ThemeData(
         primarySwatch: budgetmateColor,
         fontFamily: "Poppins",
+
+        scaffoldBackgroundColor: Colors.white,
 
         // Appbar Theme
         appBarTheme: const AppBarTheme(
@@ -59,7 +65,6 @@ Future main() async {
           color: const Color(0xffF2F2FA),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-               
           ),
         ),
 
@@ -124,8 +129,6 @@ Future main() async {
             ),
           ),
         ),
-        
-        
       ),
       debugShowCheckedModeBanner: false,
       routes: routes,

@@ -7,7 +7,7 @@ import '../../../../../globalwidgtes/disable_list_glow.dart';
 import '../../../../../globalwidgtes/textinput.dart';
 import '../../../../../models/budget-models/budgetmodel/budget.dart';
 import '../../../../../models/hive/boxes.dart';
-import '../../../../../models/views_data.dart';
+import '../../../../../data/views_data.dart';
 import 'widgets/spending_tile1.dart';
 
 class NewBudgetDialog extends StatefulWidget {
@@ -86,7 +86,7 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
       elevation: 0,
       child: widget.budget != null
           ? _editBudgetWidget(context)
-          : GlowingOverscrollWrapper(
+          : AntiListGlowWrapper(
               child: PageView(
                 controller: _pageController,
                 onPageChanged: (value) => newPageIndex(value),
@@ -180,6 +180,7 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
                                 controller: titleController,
                                 hintText: 'Budget Name',
                                 isNumber: false,
+                                autofocus: false,
                                 onSubmitted: null,
                               ),
                             ),
@@ -190,6 +191,7 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
                                 controller: amountController,
                                 hintText: 'Budget Amount',
                                 isNumber: true,
+                                autofocus: false,
                                 onSubmitted: null,
                               ),
                             ),
@@ -240,15 +242,13 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
                             )
                           : Flexible(
                               fit: FlexFit.loose,
-                              child: GlowingOverscrollWrapper(
+                              child: AntiListGlowWrapper(
                                 child: ListView.builder(
-                                  itemCount:
-                                      ViewData.temporarySpendings.length,
+                                  itemCount: ViewData.temporarySpendings.length,
                                   itemBuilder: (context, index) {
                                     return SpendingTile1(
                                       index: index,
-                                      bsi: ViewData
-                                          .temporarySpendings[index],
+                                      bsi: ViewData.temporarySpendings[index],
                                       delete: _deleteSpending,
                                     );
                                   },
@@ -295,8 +295,8 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
         BudgetModel(id: bgId, name: bgTitle, amount: bgAmount, date: bgDate);
 
     // save spending
-    final List<Spending> bgSpendings =
-        ViewData.temporarySpendings.toList().cast<Spending>();
+    final List<SpendingModel> bgSpendings =
+        ViewData.temporarySpendings.toList().cast<SpendingModel>();
 
     setState(() {
       Boxes.budgetBox().add(newBudget);
@@ -411,6 +411,7 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
                   controller: titleController,
                   hintText: 'Budget Name',
                   isNumber: false,
+                  autofocus: false,
                   onSubmitted: null,
                 ),
               ),
@@ -420,6 +421,7 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
                   controller: amountController,
                   hintText: 'Budget Amount',
                   isNumber: true,
+                  autofocus: false,
                   onSubmitted: null,
                 ),
               ),
@@ -503,12 +505,14 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
                 controller: _titleController,
                 hintText: 'Spending Name',
                 isNumber: false,
+                autofocus: false,
                 onSubmitted: null,
               ),
               UserInputField(
                 controller: _amountController,
                 hintText: 'Spending Amountt',
                 isNumber: true,
+                autofocus: false,
                 onSubmitted: null,
               ),
             ],
@@ -521,7 +525,7 @@ class _NewBudgetDialogState extends State<NewBudgetDialog> {
   void _saveSpending() {
     List<int> ids = List<int>.filled(2, getRandom());
     ids[0] = bgId;
-    final spending = Spending(
+    final spending = SpendingModel(
         ids: ids,
         name: _titleController.text.trim(),
         spendingAmount: double.parse(_amountController.text.trim()),

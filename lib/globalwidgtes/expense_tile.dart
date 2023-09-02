@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../models/budget-models/budgetmodel/budget.dart';
 
 class ExpenseTile extends StatelessWidget {
-  final Expense exp;
+  final ExpenseModel exp;
 
   final DateFormat formatter = DateFormat('HH:mm');
   ExpenseTile({super.key, required this.exp});
@@ -13,8 +13,8 @@ class ExpenseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
-      height: 72,
+      margin: const EdgeInsets.only(top: 2.5, bottom: 2.5, left: 10, right: 10),
+      height: 67,
       child: Column(
         children: [
           Row(
@@ -24,7 +24,8 @@ class ExpenseTile extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 10),
                 child: CircleAvatar(
                   radius: 33,
-                  backgroundColor: const Color(0xff0071FF).withOpacity(0.1),
+                  backgroundColor: Colors
+                      .transparent /* const Color(0xff0071FF).withOpacity(0.1) */,
                   child: SvgPicture.asset(
                     exp.category,
                     fit: BoxFit.contain,

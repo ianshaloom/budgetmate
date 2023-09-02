@@ -5,9 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../globalwidgtes/disable_list_glow.dart';
 import '../../../../../globalwidgtes/textinput.dart';
 import '../../../../../models/budget-models/budgetmodel/budget.dart';
-import '../../../../../models/data_validation.dart';
+import '../../../../../data/clean_up.dart';
 import '../../../../../models/hive/boxes.dart';
-import '../../../../../models/views_data.dart';
+import '../../../../../data/views_data.dart';
 import '../../dialogs/new_budget_dialog/widgets/spending_tile1.dart';
 
 class EditBudgetSD extends StatefulWidget {
@@ -19,8 +19,9 @@ class EditBudgetSD extends StatefulWidget {
 }
 
 class _EditBudgetSDState extends State<EditBudgetSD> {
-  List<Spending> _spendings =
-      Boxes.spendingBox().values.toList().cast<Spending>();
+  List<SpendingModel> _spendings =
+      Boxes.spendingBox().values.toList().cast<SpendingModel>();
+  final Clean _clean = Clean();
 
   // Text Contollers
   final _titleController = TextEditingController();
@@ -51,7 +52,7 @@ class _EditBudgetSDState extends State<EditBudgetSD> {
     _spendings = _spendings
         .where((element) => element.ids[0] == widget.budget.id)
         .toList()
-        .cast<Spending>();
+        .cast<SpendingModel>();
 
     return Card(
       elevation: 0,
@@ -92,6 +93,7 @@ class _EditBudgetSDState extends State<EditBudgetSD> {
                     controller: _titleController,
                     hintText: 'Budget Name',
                     isNumber: false,
+                    autofocus: false,
                     onSubmitted: null,
                   ),
                 ),
@@ -101,6 +103,7 @@ class _EditBudgetSDState extends State<EditBudgetSD> {
                     controller: _amountController,
                     hintText: 'Budget Amount',
                     isNumber: true,
+                    autofocus: false,
                     onSubmitted: null,
                   ),
                 ),
@@ -137,7 +140,7 @@ class _EditBudgetSDState extends State<EditBudgetSD> {
                       height: 200,
                     ),
                   )
-                : GlowingOverscrollWrapper(
+                : AntiListGlowWrapper(
                     child: ListView.builder(
                       padding: const EdgeInsets.only(top: 10),
                       itemCount: _spendings.length,
@@ -157,50 +160,42 @@ class _EditBudgetSDState extends State<EditBudgetSD> {
   }
 
   // Add deleted spendings to list
-  final List<Spending> _toBeDeleted = [];
-  void _deleteSpending(int index, Spending bsi) {
-    print('object');
+  final List<SpendingModel> _toBeDeleted = [];
+  void _deleteSpending(int index, SpendingModel bsi) {
     setState(() {
       _toBeDeleted.add(bsi);
       _spendings.removeAt(index);
     });
-    print(_toBeDeleted);
   }
 
   // Adding editted Budget
 
-  Future _onEdit(BudgetModel budget) async {
-    if (budget.name == _titleController.text.trim() &&
-        budget.amount == double.parse(_amountController.text.trim()) &&
+  Future _onEdit(BudgetModel b) async {
+    // perm
+    final BudgetModel bg = b;
+    final double a = bg.amount;
+
+    if (b.name == _titleController.text.trim() &&
+        b.amount == double.parse(_amountController.text.trim()) &&
         _toBeDeleted.isEmpty) {
       Navigator.of(context).pop();
     } else {
       // Save Budget Object
-      budget.name = _titleController.text.trim();
-      budget.amount = double.parse(_amountController.text.trim());
-      budget.save();
+      b.name = _titleController.text.trim();
+      b.amount = double.parse(_amountController.text.trim());
+
+      print("BG amount -- $a <<<<>>>> ${_amountController.text.trim()}");
+
+      b.save();
 
       // Delete Spendings in List
       for (var element in _toBeDeleted) {
-        List<Expense> ex;
-        Spending sp = element;
-
-        ex = GetMe.expenses
-            .where((element) => element.ids[1] == sp.ids[1])
-            .toList()
-            .cast<Expense>();
-
-        if (ex.isEmpty) {
-          sp.delete();
-        } else {
-          for (var element in ex) {
-            Expense exp = element;
-            exp.delete();
-          }
-          sp.delete();
-        }
+        _clean.cleanExp(element, false);
       }
 
+      a != double.parse(_amountController.text.trim())
+          ? _clean.cleanBgNoti(bg)
+          : null;
       Navigator.of(context).pop();
     }
   }

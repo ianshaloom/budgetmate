@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../../../../globalwidgtes/disable_list_glow.dart';
 import '../../../../models/budget-models/budgetmodel/budget.dart';
 import '../../../../models/hive/boxes.dart';
-import '../../../../models/views_data.dart';
+import '../../../../data/views_data.dart';
 
 class SpendingDetailedPage extends StatelessWidget {
   SpendingDetailedPage({super.key});
@@ -18,7 +18,7 @@ class SpendingDetailedPage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final spending = ModalRoute.of(context)!.settings.arguments as List;
     final int id = spending[0];
-    final Spending sp = spending[1];
+    final SpendingModel sp = spending[1];
     final Color color = spending[2];
 
     /* _spendings = _spendings
@@ -209,10 +209,10 @@ class SpendingDetailedPage extends StatelessWidget {
                           // reversed list of spendings
                           var ex = box.values.toList().reversed;
                           // new list with matchind sp and bg IDS
-                          List<Expense> expenses = ex
+                          List<ExpenseModel> expenses = ex
                               .where((element) => element.ids[1] == sp.ids[1])
                               .toList()
-                              .cast<Expense>();
+                              .cast<ExpenseModel>();
 
                           // return List
                           return expenses.isEmpty
@@ -223,7 +223,7 @@ class SpendingDetailedPage extends StatelessWidget {
                                     height: 60,
                                   ),
                                 )
-                              : GlowingOverscrollWrapper(
+                              : AntiListGlowWrapper(
                                   child: ListView.builder(
                                     itemCount: expenses.length,
                                     itemBuilder: (context, index) {
@@ -248,7 +248,7 @@ class SpendingDetailedPage extends StatelessWidget {
   }
 
   final DateFormat formatter = DateFormat('HH:mm');
-  Widget _expenseTile(BuildContext ctx, Expense exp) {
+  Widget _expenseTile(BuildContext ctx, ExpenseModel exp) {
     return Container(
       margin: const EdgeInsets.only(top: 5, left: 10, right: 10),
       height: 72,

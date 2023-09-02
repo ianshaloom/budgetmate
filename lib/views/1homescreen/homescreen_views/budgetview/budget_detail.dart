@@ -1,15 +1,16 @@
-import 'package:budgetmate/models/data_validation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../data/data.dart';
 import '../../../../globalwidgtes/disable_list_glow.dart';
 import '../../../../models/budget-models/budgetmodel/budget.dart';
+import '../../../../data/clean_up.dart';
 import '../../../../models/hive/boxes.dart';
-import '../../../../models/views_data.dart';
-import '../../../bottomsheets/delete_budget.dart';
+import '../../../../data/views_data.dart';
+import '../bottomsheets/delete_budget.dart';
 import 'widgets/add_spending_dialog.dart';
 import 'widgets/edit_budget_dialog.dart';
 import 'widgets/spending_tile2.dart';
@@ -22,8 +23,9 @@ class BudgetDetailedPage extends StatefulWidget {
 }
 
 class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
-  List<Spending> _spendings =
-      Boxes.spendingBox().values.toList().cast<Spending>();
+  List<SpendingModel> _spendings =
+      Boxes.spendingBox().values.toList().cast<SpendingModel>();
+  final Clean _clean = Clean();
 
   @override
   void initState() {
@@ -43,7 +45,7 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
     _spendings = _spendings
         .where((element) => element.ids[0] == budget.id)
         .toList()
-        .cast<Spending>();
+        .cast<SpendingModel>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
@@ -300,10 +302,10 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
                         // reversed list of spendings
                         var sp = box.values.toList().reversed;
                         // new list with matchind sp and bg IDS
-                        List<Spending> spendings = sp
+                        List<SpendingModel> spendings = sp
                             .where((element) => element.ids[0] == budget.id)
                             .toList()
-                            .cast<Spending>();
+                            .cast<SpendingModel>();
 
                         // return List
                         return spendings.isEmpty
@@ -314,7 +316,7 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
                                   height: 60,
                                 ),
                               )
-                            : GlowingOverscrollWrapper(
+                            : AntiListGlowWrapper(
                                 child: ListView.builder(
                                   itemCount: spendings.length,
                                   itemBuilder: (context, index) {
@@ -349,8 +351,29 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
 
   Future _deleteBudget(BudgetModel budget) async {
     budget.delete();
-    deleteSpendings(budget.id);
-    deleteExpenses(budget.id);
+
+    // clean budget notifications
+    _clean.cleanBgNoti(budget);
+
+    // clean budget spending notifications ------------- //
+    final spendings = GetMe.spendings;
+    _spendings = spendings
+        .where((element) => element.ids[0] == budget.id)
+        .toList()
+        .cast<SpendingModel>();
+
+    for (var element in _spendings) {
+      SpendingModel sp = element;
+      _clean.cleanSpNoti(sp, true);
+    }
+    // ------------------------------------------------- //
+
+    //clean budget spendings
+    _clean.cleanSpe(budget);
+
+    // clean budget expenses
+    _clean.cleanExp(budget, true);
+
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 

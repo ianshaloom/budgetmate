@@ -59,7 +59,6 @@ class _MyMenuState extends State<MyMenu> {
 
             // DropDown Menu Entries
             dropdownMenuEntries: widget.names.map((String value) {
-              print(value);
               return DropdownMenuEntry(
                 value: value,
                 label: value,

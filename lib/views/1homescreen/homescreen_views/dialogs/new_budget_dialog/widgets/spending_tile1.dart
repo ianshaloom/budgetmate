@@ -6,7 +6,7 @@ import '../../../../../../models/budget-models/budgetmodel/budget.dart';
 
 class SpendingTile1 extends StatelessWidget {
   final int index;
-  final Spending bsi;
+  final SpendingModel bsi;
   final Function delete;
 
   const SpendingTile1(
@@ -36,7 +36,7 @@ class SpendingTile1 extends StatelessWidget {
         style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing: IconButton(
-        onPressed: () => delete(index,bsi),
+        onPressed: () => delete(index, bsi),
         icon: const Icon(
           CupertinoIcons.delete,
           color: Color(0xffC10000),

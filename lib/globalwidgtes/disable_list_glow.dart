@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class GlowingOverscrollWrapper extends StatelessWidget {
+class AntiListGlowWrapper extends StatelessWidget {
   final Widget child;
 
-  const GlowingOverscrollWrapper({super.key, required this.child});
+  const AntiListGlowWrapper({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

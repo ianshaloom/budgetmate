@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Map<int, Color> color = {
-  50: const Color.fromRGBO(0, 113, 255,.1),
+  50: const Color.fromRGBO(0, 113, 255, .1),
   100: const Color.fromRGBO(0, 113, 255, .2),
   200: const Color.fromRGBO(0, 113, 255, .3),
   300: const Color.fromRGBO(0, 113, 255, .4),
@@ -12,6 +12,5 @@ Map<int, Color> color = {
   800: const Color.fromRGBO(0, 113, 255, .9),
   900: const Color.fromRGBO(0, 113, 255, 1),
 };
-
 
 MaterialColor budgetmateColor = MaterialColor(0xFF0071FF, color);

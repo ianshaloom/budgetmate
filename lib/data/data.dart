@@ -1,6 +1,11 @@
+/// CLASS CONTAINS INITIALIZED DATA AND GETTERS CLASS FOR ANY OTHER NEEDED DATA
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
+import '../models/budget-models/budgetmodel/budget.dart';
+import '../models/hive/boxes.dart';
+import '../models/notification-model/notification.dart';
 
 late String _greeting;
 String get greeting => determineGreeting();
@@ -52,7 +57,6 @@ final Map<String, String> categoriesMap = {
   'Entertainment': "assets/images/category/entertainment.svg",
 };
 
-
 final List<Color> colors = [
   const Color(0xff92ba92),
   const Color(0xff660e60),
@@ -72,4 +76,20 @@ Color getcolor() {
   i = Random().nextInt((colors.length)) + 0;
   color = colors[i];
   return color;
+}
+
+/// --------------------------------- Getters Class ------------------------ //
+class GetMe {
+  // Get all Objects to a List
+  static List<BudgetModel> get budgets =>
+      Boxes.budgetBox().values.toList().cast<BudgetModel>();
+
+  static List<SpendingModel> get spendings =>
+      Boxes.spendingBox().values.toList().cast<SpendingModel>();
+
+  static List<ExpenseModel> get expenses =>
+      Boxes.expenseBox().values.toList().cast<ExpenseModel>();
+
+  static List<NotificationModel> get notifications =>
+      Boxes.notificationBox().values.toList().cast<NotificationModel>();
 }

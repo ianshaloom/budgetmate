@@ -65,12 +65,14 @@ class _NewSpendingSDState extends State<NewSpendingSD> {
                   controller: _titleController,
                   hintText: 'Spending Name',
                   isNumber: false,
+                  autofocus: false,
                   onSubmitted: null,
                 ),
                 UserInputField(
                   controller: _amountController,
                   hintText: 'Spending Amount',
                   isNumber: true,
+                  autofocus: false,
                   onSubmitted: null,
                 ),
               ],
@@ -84,7 +86,7 @@ class _NewSpendingSDState extends State<NewSpendingSD> {
   Future _saveSpending() async {
     List<int> ids = List<int>.filled(2, getRandom());
     ids[0] = widget.budgetID;
-    final sp = Spending(
+    final sp = SpendingModel(
         ids: ids,
         name: _titleController.text.trim(),
         spendingAmount: double.parse(_amountController.text.trim()),

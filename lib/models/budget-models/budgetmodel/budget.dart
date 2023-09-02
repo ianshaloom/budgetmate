@@ -34,7 +34,7 @@ class BudgetModel extends HiveObject {
 }
 
 @HiveType(typeId: 1)
-class Spending extends HiveObject {
+class SpendingModel extends HiveObject {
   @HiveField(0)
   String name;
 
@@ -47,7 +47,7 @@ class Spending extends HiveObject {
   @HiveField(3)
   List<int> ids = List<int>.filled(2, getRandom());
 
-  Spending({
+  SpendingModel({
     required this.ids,
     required this.name,
     required this.spendingAmount,
@@ -56,7 +56,7 @@ class Spending extends HiveObject {
 }
 
 @HiveType(typeId: 2)
-class Expense extends HiveObject {
+class ExpenseModel extends HiveObject {
   @HiveField(0)
   String category;
 
@@ -72,7 +72,7 @@ class Expense extends HiveObject {
   @HiveField(4)
   List<int> ids = List<int>.filled(3, getRandom());
 
-  Expense({
+  ExpenseModel({
     required this.ids,
     required this.category,
     required this.expenseName,

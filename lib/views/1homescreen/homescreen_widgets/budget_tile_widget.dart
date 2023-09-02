@@ -1,11 +1,10 @@
-import 'package:budgetmate/models/data_validation.dart';
+import 'package:budgetmate/data/data_validation.dart';
 import 'package:budgetmate/models/hive/boxes.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../globalwidgtes/clip_paths.dart';
-import '../../../../models/views_data.dart';
 
 class BudgetView extends StatelessWidget {
   final List budgets;
@@ -33,14 +32,14 @@ class BudgetView extends StatelessWidget {
   }
 
   Widget budgetTile(BuildContext context, int index) {
-    double percent() {
+    /* double percent() {
       double percent;
       double i = budgets[index].amount;
 
       percent = (BudgetViewData().bGamountSpent(budgets[index]) / i) * 100;
 
       return percent;
-    }
+    } */
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -94,7 +93,7 @@ class BudgetView extends StatelessWidget {
                           builder: (context, value, child) {
                             final List<double> data =
                                 value.get(budgets[index].id) ?? [0, 0];
-                                
+
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [

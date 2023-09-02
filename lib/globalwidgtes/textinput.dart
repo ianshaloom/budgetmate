@@ -4,6 +4,7 @@ class UserInputField extends StatelessWidget {
   final TextEditingController? controller;
   final String hintText;
   final bool isNumber;
+  final bool autofocus;
   final void Function(String)? onSubmitted;
 
   const UserInputField({
@@ -12,6 +13,7 @@ class UserInputField extends StatelessWidget {
     required this.hintText,
     required this.isNumber,
     required this.onSubmitted,
+    required this.autofocus,
   });
 
   @override
@@ -37,7 +39,7 @@ class UserInputField extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: TextField(
-              autofocus: isNumber ? false : true,
+              autofocus: autofocus,
               controller: controller,
               keyboardType:
                   isNumber ? TextInputType.number : TextInputType.text,

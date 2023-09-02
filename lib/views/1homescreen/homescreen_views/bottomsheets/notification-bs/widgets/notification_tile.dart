@@ -1,48 +1,41 @@
+import 'package:budgetmate/models/notification-model/notification.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NotificationTile extends StatelessWidget {
-  final String title;
-  final String content;
-  final int index;
+  final NotificationModel notification;
   final Function delete;
-  final Color color;
   const NotificationTile({
     super.key,
-    required this.title,
-    required this.content,
-    required this.index,
-    required this.delete, required this.color,
+    required this.notification,
+    required this.delete,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
+      elevation: 6,
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(
-          color: color,
-        ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8, left: 10, right: 10),
+        padding: const EdgeInsets.only(bottom: 8, left: 10),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  title,
-                  style:  TextStyle(
+                  notification.title,
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: color,
+                    color: getColorFromHex(notification.color),
                   ),
                 ),
                 IconButton(
-                  onPressed: () => delete(index),
+                  onPressed: () => delete(notification),
                   icon: const Icon(
                     CupertinoIcons.xmark,
                     color: Color(0xff666666),
@@ -52,11 +45,11 @@ class NotificationTile extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 50),
+              padding: const EdgeInsets.only(right: 10),
               child: Text(
-                content,
+                notification.content,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: Color(0xff666666),
                 ),
@@ -66,5 +59,11 @@ class NotificationTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll("#", ""); // Remove the '#' symbol if present
+    int colorValue = int.parse(hexColor, radix: 16); // Convert hex to int
+    return Color(0xff000000 + colorValue); // Add 0xff as the alpha value
   }
 }

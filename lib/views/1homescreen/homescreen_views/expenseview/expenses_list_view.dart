@@ -1,9 +1,9 @@
-import 'package:budgetmate/models/budget-models/budgetmodel/budget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../data/data.dart';
 import '../../../../globalwidgtes/disable_list_glow.dart';
 import '../../../../globalwidgtes/expense_tile.dart';
-import '../../../../models/data_validation.dart';
+import '../../../../models/budget-models/budgetmodel/budget.dart';
 
 class ExpensesListPage extends StatefulWidget {
   const ExpensesListPage({super.key});
@@ -14,11 +14,11 @@ class ExpensesListPage extends StatefulWidget {
 
 class _ExpensesListPageState extends State<ExpensesListPage> {
   final _controller = TextEditingController();
-  final List<Expense> _expenses = GetMe.expenses;
+  final List<ExpenseModel> _expenses = GetMe.expenses;
 
-  List<Expense> _tempList = [];
+  List<ExpenseModel> _tempList = [];
   void _searchExpense(String query) {
-    List<Expense> ex = [];
+    List<ExpenseModel> ex = [];
 
     if (query.isEmpty) {
       ex = _expenses;
@@ -62,7 +62,7 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
           children: [
             Column(
               children: [
-                Container(
+                /* Container(
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(top: 15),
                   child: const Text(
@@ -72,7 +72,7 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
                       fontSize: 24,
                     ),
                   ),
-                ),
+                ), */
                 Container(
                   margin: const EdgeInsets.only(top: 10),
                   height: 7,
@@ -83,7 +83,7 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
                   ),
                 ),
                 Container(
-                  height: 55,
+                  height: 50,
                   alignment: Alignment.center,
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -100,7 +100,10 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
                       decoration: const InputDecoration(
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
-                        hintText: 'Search Expense',
+                        hintText: 'Search for expense',
+                        hintStyle: TextStyle(
+                          fontSize: 15,
+                        ),
                         icon: Icon(
                           Icons.search,
                           size: 28,
@@ -114,7 +117,7 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
             ),
             Flexible(
                 fit: FlexFit.tight,
-                child: GlowingOverscrollWrapper(
+                child: AntiListGlowWrapper(
                   child: ListView.builder(
                     itemCount: _tempList.length,
                     itemBuilder: (context, index) {

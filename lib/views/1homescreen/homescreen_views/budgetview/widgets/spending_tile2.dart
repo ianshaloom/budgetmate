@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 
 import '../../../../../data/data.dart';
 import '../../../../../models/budget-models/budgetmodel/budget.dart';
-import '../../../../../models/views_data.dart';
+import '../../../../../data/views_data.dart';
 
 class SpendingTile2 extends StatelessWidget {
-  final Spending bsi;
+  final SpendingModel bsi;
 
   final ValueNotifier<double> _valueNotifier = ValueNotifier(00);
   final Color color = getcolor();

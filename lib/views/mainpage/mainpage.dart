@@ -4,9 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../1homescreen/home_page.dart';
-import '../2statisticsscreen/statistic_page.dart';
-import '../3notificationscreen/notification_page.dart';
-import '../4profilescreen/profile_page.dart';
+import '../2dashboardscreen/dashboard_page.dart';
+import '../3statisticsscreen/statistic_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,12 +14,12 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage>
+    with SingleTickerProviderStateMixin {
   final List<Widget> _screens = [
     const HomePage(),
+    const DashboardPage(),
     const StatisticPage(),
-    const NotificationPage(),
-    const ProfilePage()
   ];
   int _index = 0;
 
@@ -28,6 +27,17 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _index = index;
     });
+  }
+
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this, // SingleTickerProviderStateMixin provides the vsync
+      duration: const Duration(seconds: 2), // Duration of the animation
+    );
+    super.initState();
   }
 
   @override
@@ -48,7 +58,21 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Colors.white,
         toolbarHeight: 10,
       ),
-      body: _screens[_index],
+      body: SizedBox(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          /* transitionBuilder: (Widget child, Animation<double> animation) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0),
+                end: const Offset(0, 0),
+              ).animate(animation),
+              child: child,
+            );
+          }, */
+          child: _screens[_index],
+        ),
+      ),
 
       // Bottom Navigation Bar
       bottomNavigationBar: CurvedNavigationBar(
@@ -63,17 +87,12 @@ class _MainPageState extends State<MainPage> {
             height: 20,
           ),
           SvgPicture.asset(
+            'assets/icons/add2.svg',
+            fit: BoxFit.contain,
+            height: 20,
+          ),
+          SvgPicture.asset(
             'assets/icons/analytics.svg',
-            fit: BoxFit.contain,
-            height: 20,
-          ),
-          SvgPicture.asset(
-            'assets/icons/notification.svg',
-            fit: BoxFit.contain,
-            height: 20,
-          ),
-          SvgPicture.asset(
-            'assets/icons/profile.svg',
             fit: BoxFit.contain,
             height: 20,
           ),
