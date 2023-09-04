@@ -6,10 +6,10 @@ import '../../globalwidgtes/disable_list_glow.dart';
 import '../../globalwidgtes/expense_tile.dart';
 import '../../models/budget-models/budgetmodel/budget.dart';
 import '../../models/hive/boxes.dart';
+import '../1homescreen/homescreen_views/3expenseview/expense_dialog_view.dart';
 import 'dashboard_views/bottomsheets/new_item.dart';
-import '../1homescreen/homescreen_views/dialogs/new_budget_dialog/new_budget_dialog.dart';
-import '../1homescreen/homescreen_views/dialogs/new_expense_dialog/new_expense_dialog.dart';
 import '../1homescreen/homescreen_widgets/budget_tile_widget.dart';
+import 'dashboard_views/new_budget_dialog/new_budget_dialog.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -101,6 +101,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 itemBuilder: (context, index) {
                                   return ExpenseTile(
                                     exp: expenses[index],
+                                    onTap: _expenseSD,
                                   );
                                 }),
                           );
@@ -145,25 +146,31 @@ class _DashboardPageState extends State<DashboardPage> {
   }
   // ----------------------------------------------- //
 
-  // Add new Budget Dialog Functions ----------------- //
-  Future _addNewExpense(BuildContext cxt) async {
-    Navigator.of(context).pop();
-    await showDialog(
-      context: cxt,
-      builder: (context) => const NewExpenseSD(),
-    );
-  }
-  // ----------------------------------------------- //
-
   // Add new Item Dialog Functions ----------------- //
   Future _newItemBS(BuildContext cxt) async {
     await showModalBottomSheet(
       context: cxt,
-      builder: (context) => AddNewItemBS(
-        newBudget: _addNewBudget,
-        newExpense: _addNewExpense,
+      builder: (context) => AddNewBudgetBS(
+        newBudget: _addNewBudget
       ),
     );
   }
   // ----------------------------------------------- //
+
+  // Expense Dialod ----------------------------------------------- //
+  Future _deleteExpense(ExpenseModel expense) async {
+    expense.delete();
+    Navigator.of(context).pop();
+  }
+
+  Future _expenseSD(BuildContext cxt, ExpenseModel expense) async {
+    await showDialog(
+      context: cxt,
+      builder: (context) => ExpensePageSD(
+        expense: expense,
+        onPressed: _deleteExpense,
+        inDash: true,
+      ),
+    );
+  }
 }

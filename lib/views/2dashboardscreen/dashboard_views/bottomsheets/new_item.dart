@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AddNewItemBS extends StatelessWidget {
+class AddNewBudgetBS extends StatelessWidget {
   final Function newBudget;
-  final Function newExpense;
-  const AddNewItemBS(
-      {super.key, required this.newBudget, required this.newExpense});
+  const AddNewBudgetBS({super.key, required this.newBudget});
 
   @override
   Widget build(BuildContext context) {

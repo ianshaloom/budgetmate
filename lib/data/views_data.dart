@@ -1,6 +1,5 @@
 import 'data.dart';
 import '../models/budget-models/budgetmodel/budget.dart';
-import 'data_validation.dart';
 import '../models/hive/boxes.dart';
 import '../models/notification-model/notification.dart';
 
@@ -26,6 +25,15 @@ class BudgetViewData {
 
     return amount;
   }
+
+  String getBudgetName(int id) {
+    String name;
+
+    var budget = GetMe.budgets.where((element) => element.id == id).first;
+
+    name = budget.name;
+    return name;
+  }
 }
 
 class SpendingViewData {
@@ -46,6 +54,16 @@ class SpendingViewData {
     }
 
     return amount;
+  }
+  
+  
+  String getSpendingName(int id) {
+    String name;
+
+    var spending = GetMe.spendings.where((element) => element.ids[1] == id).first;
+
+    name = spending.name;
+    return name;
   }
 }
 

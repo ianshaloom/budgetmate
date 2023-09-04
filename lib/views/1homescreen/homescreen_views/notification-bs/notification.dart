@@ -1,11 +1,11 @@
-import 'package:budgetmate/views/1homescreen/homescreen_views/bottomsheets/notification-bs/widgets/notification_tile.dart';
+import 'package:budgetmate/views/1homescreen/homescreen_views/notification-bs/widgets/notification_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../../../globalwidgtes/disable_list_glow.dart';
-import '../../../../../models/hive/boxes.dart';
-import '../../../../../models/notification-model/notification.dart';
+import '../../../../globalwidgtes/disable_list_glow.dart';
+import '../../../../models/hive/boxes.dart';
+import '../../../../models/notification-model/notification.dart';
 
 
 class NotificationBS extends StatefulWidget {

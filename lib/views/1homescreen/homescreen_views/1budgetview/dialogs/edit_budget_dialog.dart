@@ -8,7 +8,7 @@ import '../../../../../models/budget-models/budgetmodel/budget.dart';
 import '../../../../../data/clean_up.dart';
 import '../../../../../models/hive/boxes.dart';
 import '../../../../../data/views_data.dart';
-import '../../dialogs/new_budget_dialog/widgets/spending_tile1.dart';
+import '../../../../2dashboardscreen/dashboard_views/new_budget_dialog/widgets/spending_tile1.dart';
 
 class EditBudgetSD extends StatefulWidget {
   final BudgetModel budget;

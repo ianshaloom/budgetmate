@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../models/budget-models/budgetmodel/budget.dart';
-import '../../../../models/hive/boxes.dart';
+import '../../../../../models/budget-models/budgetmodel/budget.dart';
+import '../../../../../models/hive/boxes.dart';
 
 class DeleteBudgetBS extends StatelessWidget {
   final Function onPressed;

@@ -1,34 +1,35 @@
+import 'package:budgetmate/models/budget-models/budgetmodel/budget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../../data/data.dart';
 import '../../../../globalwidgtes/disable_list_glow.dart';
 import '../../../../globalwidgtes/expense_tile.dart';
-import '../../../../models/budget-models/budgetmodel/budget.dart';
 import '../../../../models/hive/boxes.dart';
 import '../3expenseview/expense_dialog_view.dart';
 
-class ExpensesListPage extends StatefulWidget {
-  const ExpensesListPage({super.key});
+class BgExpensesListPage extends StatefulWidget {
+  final List<ExpenseModel> expenses;
+  final String name;
+  const BgExpensesListPage(
+      {super.key, required this.expenses, required this.name});
 
   @override
-  State<ExpensesListPage> createState() => _ExpensesListPageState();
+  State<BgExpensesListPage> createState() => _BgExpensesListPageState();
 }
 
-class _ExpensesListPageState extends State<ExpensesListPage> {
+class _BgExpensesListPageState extends State<BgExpensesListPage> {
   final _controller = TextEditingController();
-  final List<ExpenseModel> _expenses = GetMe.expenses;
 
   List<ExpenseModel> _tempList = [];
   void _searchExpense(String query) {
     List<ExpenseModel> ex = [];
 
     if (query.isEmpty) {
-      ex = _expenses;
+      ex = widget.expenses;
     } else {
-      ex = _expenses
+      ex = widget.expenses
           .where(
               (e) => e.expenseName.toLowerCase().contains(query.toLowerCase()))
           .toList();
@@ -41,7 +42,7 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
 
   @override
   void initState() {
-    _tempList = _expenses;
+    _tempList = widget.expenses;
     super.initState();
   }
 
@@ -66,10 +67,10 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
             color: Colors.black,
           ),
         ),
-        title: const Text(
-          "Expenses",
+        title: Text(
+          "${widget.name} Expenses",
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 19,
             color: Colors.black,
             fontWeight: FontWeight.w400,
@@ -89,18 +90,9 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
             Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  height: 7,
-                  width: 75,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xffD9D9D9),
-                  ),
-                ),
-                Container(
                   height: 50,
                   alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
@@ -168,7 +160,7 @@ class _ExpensesListPageState extends State<ExpensesListPage> {
   // Expense Dialod ----------------------------------------------- //
   Future _deleteExpense(ExpenseModel expense) async {
     _tempList.remove(expense);
-    _expenses.remove(expense);
+    widget.expenses.remove(expense);
     expense.delete();
     Navigator.of(context).pop();
   }

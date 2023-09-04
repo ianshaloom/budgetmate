@@ -1,3 +1,4 @@
+import 'package:budgetmate/views/1homescreen/homescreen_views/expenseview/budget_expenses_list_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,9 +11,9 @@ import '../../../../models/budget-models/budgetmodel/budget.dart';
 import '../../../../data/clean_up.dart';
 import '../../../../models/hive/boxes.dart';
 import '../../../../data/views_data.dart';
-import '../bottomsheets/delete_budget.dart';
-import 'widgets/add_spending_dialog.dart';
-import 'widgets/edit_budget_dialog.dart';
+import 'widgets/delete_budget.dart';
+import 'dialogs/add_spending_dialog.dart';
+import 'dialogs/edit_budget_dialog.dart';
 import 'widgets/spending_tile2.dart';
 
 class BudgetDetailedPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class BudgetDetailedPage extends StatefulWidget {
 
 class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
   List<SpendingModel> _spendings =
-      Boxes.spendingBox().values.toList().cast<SpendingModel>();
+      GetMe.spendings.toList().cast<SpendingModel>();
   final Clean _clean = Clean();
 
   @override
@@ -46,6 +47,12 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
         .where((element) => element.ids[0] == budget.id)
         .toList()
         .cast<SpendingModel>();
+
+    final ex = GetMe.expenses.toList().reversed;
+    List<ExpenseModel> expenses = ex
+        .where((element) => element.ids[0] == budget.id)
+        .toList()
+        .cast<ExpenseModel>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
@@ -276,9 +283,11 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed(
-                            '/budget_detail_page/budget_expenses_page',
-                            arguments: budget),
+                        onTap: () => Navigator.of(context)
+                          ..push(MaterialPageRoute(
+                            builder: (context) => BgExpensesListPage(
+                                expenses: expenses, name: budget.name),
+                          )),
                         child: Text(
                           'Expenses',
                           style: TextStyle(
@@ -320,9 +329,7 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
                                 child: ListView.builder(
                                   itemCount: spendings.length,
                                   itemBuilder: (context, index) {
-                                    return SpendingTile2(
-                                      bsi: spendings[index],
-                                    );
+                                    return SpendingTile2(bsi: spendings[index]);
                                   },
                                 ),
                               );
@@ -393,5 +400,46 @@ class _BudgetDetailedPageState extends State<BudgetDetailedPage> {
         budgetID: id,
       ),
     );
+  }
+
+  // Spending state fuctions ----------------------------------------- //
+
+  // Delete Budget BottomSheet
+  Future _deleteSpendingBS(BuildContext cxt, BudgetModel budget) async {
+    await showModalBottomSheet(
+      context: cxt,
+      builder: (context) => DeleteBudgetBS(
+        onPressed: _deleteSpending,
+        budget: budget,
+      ),
+    );
+  }
+
+  Future _deleteSpending(BudgetModel budget) async {
+    budget.delete();
+
+    // clean budget notifications
+    _clean.cleanBgNoti(budget);
+
+    // clean budget spending notifications ------------- //
+    final spendings = GetMe.spendings;
+    _spendings = spendings
+        .where((element) => element.ids[0] == budget.id)
+        .toList()
+        .cast<SpendingModel>();
+
+    for (var element in _spendings) {
+      SpendingModel sp = element;
+      _clean.cleanSpNoti(sp, true);
+    }
+    // ------------------------------------------------- //
+
+    //clean budget spendings
+    _clean.cleanSpe(budget);
+
+    // clean budget expenses
+    _clean.cleanExp(budget, true);
+
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }

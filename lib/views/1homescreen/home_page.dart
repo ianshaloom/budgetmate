@@ -6,7 +6,7 @@ import '../../data/data.dart';
 import '../../globalwidgtes/disable_list_glow.dart';
 import '../../models/budget-models/budgetmodel/budget.dart';
 import '../../models/hive/boxes.dart';
-import 'homescreen_views/bottomsheets/notification-bs/notification.dart';
+import 'homescreen_views/notification-bs/notification.dart';
 import 'homescreen_widgets/budget_tile_widget.dart';
 import 'homescreen_widgets/payment_tile.dart';
 
