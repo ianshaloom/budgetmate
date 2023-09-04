@@ -1,39 +1,53 @@
+import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/budget-models/budgetmodel/budget.dart';
+import '../../../../../data/data.dart';
+import '../../../../../models/budget-models/budgetmodel/budget.dart';
+import '../../../../../data/views_data.dart';
 
-class ExpenseTile extends StatelessWidget {
-  final ExpenseModel exp;
-  final Function onTap;
+class SpendingTile2 extends StatelessWidget {
+  final SpendingModel bsi;
 
-  final DateFormat formatter = DateFormat('HH:mm');
-  ExpenseTile({super.key, required this.exp, required this.onTap});
+  final ValueNotifier<double> _valueNotifier = ValueNotifier(00);
+  final Color color = getcolor();
+  SpendingTile2({super.key, required this.bsi});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onTap(context, exp),
+      onTap: () {
+        Navigator.of(context).pushNamed(
+            '/budget_detail_page/budget_spending_page',
+            arguments: [bsi.ids[1], bsi, color]);
+      },
       child: Container(
-        margin:
-            const EdgeInsets.only(top: 2.5, bottom: 2.5, left: 10, right: 10),
-        height: 67,
+        margin: const EdgeInsets.only(top: 5, bottom: 10),
+        height: 65,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: CircleAvatar(
-                    radius: 33,
-                    backgroundColor: Colors
-                        .transparent /* const Color(0xff0071FF).withOpacity(0.1) */,
-                    child: SvgPicture.asset(
-                      exp.category,
-                      fit: BoxFit.contain,
-                      height: 43,
+                Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  height: 60,
+                  width: 60,
+                  child: DashedCircularProgressBar.aspectRatio(
+                    aspectRatio: 1.3, // width ÷ height
+                    valueNotifier: _valueNotifier,
+                    progress: SpendingViewData().sPamountSpent(bsi),
+                    maxProgress: bsi.spendingAmount,
+                    corners: StrokeCap.butt,
+                    foregroundColor: color,
+                    backgroundColor: const Color.fromARGB(45, 105, 105, 105),
+                    foregroundStrokeWidth: 5,
+                    backgroundStrokeWidth: 5,
+                    animation: true,
+                    child: Center(
+                      child: Text(
+                        ExpenseViewData().expenseCount(bsi).toString(),
+                      ),
                     ),
                   ),
                 ),
@@ -49,14 +63,10 @@ class ExpenseTile extends StatelessWidget {
                         child: Wrap(
                           children: [
                             Text(
-                              exp.expenseName,
+                              bsi.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Color(0xff000000),
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context).textTheme.labelLarge,
                             ),
                           ],
                         ),
@@ -64,7 +74,9 @@ class ExpenseTile extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
                         child: Text(
-                          '${DateFormat.d().format(exp.date)} ${DateFormat.MMM().format(exp.date)}    •  ${formatter.format(exp.date)}',
+                          NumberFormat('#,##0.00')
+                              .format(bsi.spendingAmount)
+                              .toString(),
                           style: const TextStyle(
                             fontSize: 12,
                             color: Color(0xff929292),
@@ -81,9 +93,9 @@ class ExpenseTile extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 0.0),
                       child: Text(
-                        NumberFormat('#,##0.00').format(exp.amountSpent),
+                        '-KSHS. ${NumberFormat('#,##0.00').format(SpendingViewData().sPamountSpent(bsi))}',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 10,
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w600,
                         ),
@@ -95,11 +107,8 @@ class ExpenseTile extends StatelessWidget {
             ),
             const Flexible(
               child: Padding(
-                padding: EdgeInsets.only(top: 5),
-                child: Divider(
-                  indent: 2,
-                  endIndent: 2,
-                ),
+                padding: EdgeInsets.only(top: 8),
+                child: Divider(),
               ),
             )
           ],
