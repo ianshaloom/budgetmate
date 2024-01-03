@@ -1,11 +1,41 @@
-# budgetmate
+# BudgetMate
 
-A new Flutter project.
+A new Flutter project for managing budgets.
 
-## Getting Started
-![Screenshot_1686922565](https://github.com/ianshaloom/budgetmate/assets/82651930/dbe64c0e-651e-45a3-a09f-824c2f78edfb)
+## Description
 
-![Screenshot_1686922221](https://github.com/ianshaloom/budgetmate/assets/82651930/8e156308-c15d-41af-8af5-2314070244bd)
+This Flutter project is designed for budget management.
 
-![Screenshot_1686922160](https://github.com/ianshaloom/budgetmate/assets/82651930/819af801-a30e-4fcd-9a5d-05c5a5422f51)
+## Version
 
+Current version: 1.0.0+1
+
+## Environment
+
+Requires Flutter SDK version >=3.0.3 <4.0.0
+
+## Dependencies
+
+- cupertino_icons: ^1.0.2
+- flutter: sdk: flutter
+- flutter_svg: ^2.0.7
+- intl: ^0.18.1
+- d_chart: ^2.2.11
+- flutter_slidable: ^3.0.0
+
+## Development Dependencies
+
+- flutter_lints: ^2.0.0
+- flutter_test: sdk: flutter
+
+## Flutter Configuration
+
+- Uses Material Design
+- Includes Material Icons font
+- Assets:
+  - assets/images/
+- Fonts:
+  - Family: Poppins
+    - Regular: assets/fonts/Poppins-Regular.ttf
+    - Thin: assets/fonts/Poppins-Thin.ttf
+    - Light: assets/fonts/Poppins-Light.ttf
