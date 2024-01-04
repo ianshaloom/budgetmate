@@ -27,15 +27,3 @@ Requires Flutter SDK version >=3.0.3 <4.0.0
 
 - flutter_lints: ^2.0.0
 - flutter_test: sdk: flutter
-
-## Flutter Configuration
-
-- Uses Material Design
-- Includes Material Icons font
-- Assets:
-  - assets/images/
-- Fonts:
-  - Family: Poppins
-    - Regular: assets/fonts/Poppins-Regular.ttf
-    - Thin: assets/fonts/Poppins-Thin.ttf
-    - Light: assets/fonts/Poppins-Light.ttf
